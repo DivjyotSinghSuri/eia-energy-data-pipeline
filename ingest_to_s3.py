@@ -7,7 +7,7 @@ from io import BytesIO
 BASE_URL = "https://api.eia.gov/v2/electricity/rto/daily-region-data/data/"
 
 params = {
-    "api_key": "13kegOaPuAQnnMd1yuGXU9oTFimL8SSNCvh4Ld6d",
+    "api_key": "YOUR_API_KEY",
     "frequency": "daily",
     "data[0]": "value",
     "sort[0][column]": "period",
