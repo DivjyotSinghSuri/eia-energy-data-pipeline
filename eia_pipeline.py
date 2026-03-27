@@ -81,6 +81,8 @@ def clean_data(df):
 
     # remove duplicates (safe even if none)
     df = df.drop_duplicates()
+    
+    df["metric_value"] = df["metric_value"].astype("float64")
 
     return df
 
