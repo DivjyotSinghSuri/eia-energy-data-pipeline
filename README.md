@@ -2,64 +2,81 @@
 
 ## Overview
 
-This project builds an end-to-end data pipeline that ingests energy data from the EIA API, stores it in AWS S3, and prepares it for analytics using a medallion architecture (Bronze → Silver → Gold).
+This project implements an end-to-end data pipeline that ingests energy data from the U.S. Energy Information Administration (EIA) API, processes it, and stores it in AWS S3 using a medallion architecture (Bronze → Silver).
+
+The pipeline is designed to be reproducible, structured, and analytics-ready, with partitioned storage and clean transformation logic.
+
+---
 
 ## Architecture
 
-* **Ingestion**: Python script (requests, pandas, boto3)
-* **Storage**: AWS S3 (Bronze layer)
-* **Processing**: Databricks (planned Silver & Gold layers)
-* **Format**: Parquet
-* **Partitioning**: Year / Month / Day
+- **Ingestion & Processing**: Python (requests, pandas)
+- **Storage**: AWS S3 (Bronze & Silver layers)
+- **Format**: Parquet
+- **Partitioning**: Year / Month / Day
+- **Planned Query Layer**: AWS Athena / SQL-based analytics
+
+---
 
 ## Data Flow
 
-1. Fetch data from EIA API
-2. Transform into structured DataFrame
-3. Validate basic data quality (nulls, duplicates)
-4. Store in S3 (Bronze layer)
-5. Process in Databricks (Silver & Gold layers)
+1. Fetch energy data from EIA API
+2. Convert raw response into structured DataFrame
+3. Perform basic validation (nulls, type checks, anomalies)
+4. Store raw data in S3 (**Bronze layer**)
+5. Apply cleaning logic:
+   - Remove invalid negative values (Net generation)
+   - Drop redundant columns
+   - Ensure consistent schema
+6. Store cleaned data in S3 (**Silver layer**)
+
+---
 
 ## Tech Stack
 
-* Python
-* Pandas
-* Boto3
-* AWS S3
-* Databricks
-* Parquet
+- Python  
+- Pandas  
+- Boto3  
+- AWS S3  
+- Parquet  
+
+---
 
 ## Current Status
 
-* ✅ API ingestion complete
-* ✅ Data stored in S3 (partitioned)
-* ⏳ Silver layer (cleaning & validation) in progress
-* ⏳ Gold layer (analytics) planned
+- ✅ API ingestion pipeline implemented  
+- ✅ Bronze layer (raw data) stored in S3  
+- ✅ Silver layer (cleaned data) stored in S3  
+- ⏳ Gold layer (analytical queries) planned using SQL  
+
+---
 
 ## Future Improvements
 
-* Add automated scheduling (cron / Airflow)
-* Implement data validation checks
-* Build analytics layer (daily trends, peak demand)
-* Add dashboard for visualization
+- Implement Gold layer using SQL (Athena or DuckDB)
+- Add analytical use cases:
+  - Regional energy production trends  
+  - Import vs export dependency analysis  
+  - Peak energy usage detection  
+- Introduce workflow orchestration (Airflow / cron)
+- Add monitoring and validation checks
+- Build dashboard for visualization
+
+---
 
 ## How to Run
 
-1. Configure AWS CLI
+1. Configure AWS CLI:
+
+   ```bash
+   aws configure
+   
 2. Install dependencies:
 
-   ```
+   ```bash
    pip install boto3 pandas requests pyarrow
-   ```
-3. Run:
 
-   ```
-   python api_ingestion.py
-   ```
+3. Run the pipeline:
 
-## Key Learnings
-
-* Building data ingestion pipelines using APIs
-* Handling cloud storage (S3)
-* Data partitioning and storage formats
-* Structuring pipelines using medallion architecture
+   ```python
+   eia_pipeline.py
